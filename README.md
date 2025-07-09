@@ -1,19 +1,22 @@
 # GitHub Opener
 
-VSCodeで開いているファイルをGitHub上で開く拡張です。
+VSCodeで開いているファイル上で右クリックしたときのメニューに`GitHubで開く`を追加します。  
+デフォルトブランチで開かれます。  
+選択中の行がある場合は行まで含まれます。
 
-## 機能
-
-- エディタで開いているファイルを GitHub のリポジトリ上で表示
-- 現在の Git ブランチと相対パスに対応
-- ブラウザで自動的に開く
+## install
+```sh
+code --install-extension vscode-github-opener-0.0.1.vsix
+```
 
 ## 使い方
 
 1. Git管理されているプロジェクトのファイルを開く
 2. 右クリック → 「GitHubで開く」をクリック
-3. デフォルトブラウザでURLを表示
+3. デフォルトブラウザで対象のページが開かれる
 
-## 対応
-
-- SSH形式・HTTPS形式どちらのリモートURLも対応
+## 開発者向け
+### build
+```sh
+npx @vscode/vsce package
+```

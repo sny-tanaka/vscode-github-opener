@@ -17,14 +17,25 @@ function activate(context) {
 
     try {
       const options = { cwd: workspaceFolder.uri.fsPath };
+
       const remoteUrl = execSync('git config --get remote.origin.url', options).toString().trim();
-      const branch = execSync('git rev-parse --abbrev-ref HEAD', options).toString().trim();
+      const defaultBranchRef = execSync('git symbolic-ref refs/remotes/origin/HEAD', options).toString().trim();
+      const defaultBranch = defaultBranchRef.replace('refs/remotes/origin/', '');
 
       let githubUrl = remoteUrl
         .replace(/git@github\.com:/, 'https://github.com/')
         .replace(/\.git$/, '');
 
-      githubUrl += `/blob/${branch}/${relativePath}`;
+      githubUrl += `/blob/${defaultBranch}/${relativePath}`;
+
+      // ✅ 選択中の行番号を取得してハッシュとして追加
+      const selection = editor.selection;
+      if (!selection.isEmpty) {
+        const start = selection.start.line + 1; // VSCodeは0始まり、GitHubは1始まり
+        const end = selection.end.line + 1;
+        const lineHash = start === end ? `#L${start}` : `#L${start}-L${end}`;
+        githubUrl += lineHash;
+      }
 
       vscode.env.openExternal(vscode.Uri.parse(githubUrl));
     } catch (err) {
